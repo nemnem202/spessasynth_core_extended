@@ -15,7 +15,7 @@ import {
 import type { SequencerEvent, SequencerEventData } from "./types";
 import { arrayToHexString, ConsoleColors } from "../utils/other";
 import { SpessaLog } from "../utils/loggin";
-import type { SysExAcceptedArray } from "../midi/types";
+import type { MIDILoop, SysExAcceptedArray } from "../midi/types";
 import { MIDIUtils } from "../midi/exports";
 
 export class SpessaSynthSequencer {
@@ -359,6 +359,20 @@ export class SpessaSynthSequencer {
         }
 
         this.loadCurrentSong();
+    }
+
+    /**
+     * Update loop.
+     * @param loop the new loop.
+     */
+    public setLoop(loop: MIDILoop) {
+        if (!this._midiData) {
+            SpessaLog.warn(
+                "No songs loaded in the sequencer. Ignoring the loop call."
+            );
+            return;
+        }
+        this._midiData.loop = loop;
     }
 
     protected callEvent<K extends keyof SequencerEventData>(
